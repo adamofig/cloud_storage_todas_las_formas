@@ -1,0 +1,46 @@
+<h3>Subiendo el archivo por medio de petición</h3>
+<input id="fileToUpload" type="file">
+<hr>
+<button onclick="subirArchivo()">cargar</button>
+
+<script>
+
+    const OBJECT_CONTENT_TYPE = 'application/octet-stream'
+    const BUCKET_NAME = 'dataclouder-demo'
+
+    async function subirArchivo() {
+        console.log("Subiendo archivo")
+
+        inputFile = document.getElementById("fileToUpload");
+        console.log(inputFile.files, "length", inputFile.files.lenght);
+        if (inputFile.files.length == 0) {
+            console.log(inputFile.files);
+            alert("Por favor seleciona un archivo");
+            return
+        } else {
+            let file = inputFile.files[0];
+            loadFileApiRest(file);
+        }
+    }
+
+    function loadFileApiRest(file) {
+
+        let url = `https://storage.googleapis.com/upload/storage/v1/b/${BUCKET_NAME}/o?uploadType=media&name=api_json/${file.name}`;
+        console.log("Iniciando la carga");
+        fetch(url, {
+            method: 'POST',
+            body: file,
+            headers: {
+                'Content-Type': OBJECT_CONTENT_TYPE,
+                // 'Authorization': `Bearer ${OAUTH2_TOKEN}`
+            }
+        }).then(res => res.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => {
+                console.log('Success:', response);
+                window.open(response.mediaLink);
+            });
+
+    }
+
+</script>

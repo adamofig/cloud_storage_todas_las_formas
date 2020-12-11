@@ -1,0 +1,52 @@
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-storage.js"></script>
+
+<script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyDwf1v0zIs8t2W_YCkwddYleuy3gF1JoIc",
+        authDomain: "dataclouder-demo.firebaseapp.com",
+        databaseURL: "https://dataclouder-demo.firebaseio.com",
+        projectId: "dataclouder-demo",
+        storageBucket: "dataclouder-demo",
+        messagingSenderId: "753008387864",
+        appId: "1:753008387864:web:4f39b8127358976ccc206d",
+        measurementId: "G-H10ZSKGVE4"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+</script>
+
+<div>
+    <h3>Cargador de archivos Cloud Storage</h3>
+    <input id="fileToUpload" type="file">
+    <hr>
+    <button onclick="subirArchivo()">cargar</button>
+</div>
+
+<script>
+
+    async function subirArchivo() {
+        inputFile = document.getElementById("fileToUpload");
+        if (inputFile.files.length == 0) {
+            alert("Por favor seleciona un archivo");
+            return
+        } else {
+            let file = inputFile.files[0];
+            let storageRef = firebase.storage().ref(file.name);
+            await storageRef.put(file);
+            console.log("Terminó la descarga...");
+
+            abrirArchivo(file.name);
+        }
+    }
+
+    async function abrirArchivo(path) {
+        let storageRef = firebase.storage().ref(path);
+        let url =  await storageRef.getDownloadURL();
+        window.open(url);
+    }
+
+</script>
